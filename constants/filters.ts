@@ -51,7 +51,7 @@ export const STICKER_PACKS: { category: string; stickers: { id: string; icon: st
     stickers: [
       { id: 'heart1', icon: 'heart', lib: 'Ionicons', color: '#FF6B8A' },
       { id: 'heart2', icon: 'heart-circle', lib: 'Ionicons', color: '#FF4757' },
-      { id: 'heart3', icon: 'rose-outline', lib: 'MaterialCommunityIcons', color: '#FF6B8A' },
+      { id: 'heart3', icon: 'flower-tulip-outline', lib: 'MaterialCommunityIcons', color: '#FF6B8A' },
       { id: 'star1', icon: 'star', lib: 'Ionicons', color: '#FFD700' },
       { id: 'star2', icon: 'sparkles', lib: 'Ionicons', color: '#FFD700' },
     ],
