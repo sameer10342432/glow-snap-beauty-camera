@@ -551,7 +551,7 @@ export default function CameraScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#000' },
   cameraContainer: { ...StyleSheet.absoluteFillObject as any, overflow: 'hidden' },
-  captureFlashOverlay: { backgroundColor: '#fff', zIndex: 50 },
+  captureFlashOverlay: { backgroundColor: '#fff', zIndex: 50, pointerEvents: 'none' as any },
   permContainer: { flex: 1, backgroundColor: '#0A0A0F', alignItems: 'center', justifyContent: 'center' },
   permContent: { alignItems: 'center', paddingHorizontal: 40, gap: 20 },
   permIcon: { alignItems: 'center', gap: 12 },
