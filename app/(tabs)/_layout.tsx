@@ -1,62 +1,107 @@
-// template
 import { isLiquidGlassAvailable } from "expo-glass-effect";
 import { Tabs } from "expo-router";
 import { NativeTabs, Icon, Label } from "expo-router/unstable-native-tabs";
 import { BlurView } from "expo-blur";
-import { SymbolView } from "expo-symbols";
-import { Platform, StyleSheet, useColorScheme } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import React from "react";
+import { useApp } from "@/context/AppContext";
 
-import Colors from "@/constants/colors";
-
-//IMPORTANT: iOS 26 Exists, feel free to use NativeTabs for native tabs with liquid glass support.
 function NativeTabLayout() {
   return (
     <NativeTabs>
       <NativeTabs.Trigger name="index">
-        <Icon sf={{ default: "house", selected: "house.fill" }} />
-        <Label>Home</Label>
+        <Icon sf={{ default: "camera", selected: "camera.fill" }} />
+        <Label>Camera</Label>
+      </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="effects">
+        <Icon sf={{ default: "wand.and.stars", selected: "wand.and.stars.inverse" }} />
+        <Label>Effects</Label>
+      </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="gallery">
+        <Icon sf={{ default: "photo.stack", selected: "photo.stack.fill" }} />
+        <Label>Gallery</Label>
+      </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="collage">
+        <Icon sf={{ default: "rectangle.3.group", selected: "rectangle.3.group.fill" }} />
+        <Label>Collage</Label>
+      </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="profile">
+        <Icon sf={{ default: "person", selected: "person.fill" }} />
+        <Label>Profile</Label>
       </NativeTabs.Trigger>
     </NativeTabs>
   );
 }
 
 function ClassicTabLayout() {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === "dark";
+  const { isDark } = useApp();
+  const isIOS = Platform.OS === "ios";
+  const isWeb = Platform.OS === "web";
+
+  const CORAL = "#FF6B8A";
+  const tabInactive = isDark ? "#6B6880" : "#A0A0B0";
+  const tabBg = isDark ? "#0A0A0F" : "#FFFFFF";
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors.light.tint,
-        tabBarInactiveTintColor: Colors.light.tabIconDefault,
-        headerShown: true,
+        headerShown: false,
+        tabBarActiveTintColor: CORAL,
+        tabBarInactiveTintColor: tabInactive,
         tabBarStyle: {
           position: "absolute",
-          backgroundColor: Platform.select({
-            ios: "transparent",
-            android: isDark ? "#000" : "#fff",
-          }),
-          borderTopWidth: 0,
+          backgroundColor: isIOS ? "transparent" : tabBg,
+          borderTopWidth: isWeb ? 1 : 0,
+          borderTopColor: isDark ? "#2E2E42" : "#E5E3EF",
           elevation: 0,
+          ...(isWeb ? { height: 84 } : {}),
         },
         tabBarBackground: () =>
-          Platform.OS === "ios" ? (
+          isIOS ? (
             <BlurView
-              intensity={100}
+              intensity={90}
               tint={isDark ? "dark" : "light"}
               style={StyleSheet.absoluteFill}
             />
+          ) : isWeb ? (
+            <View style={[StyleSheet.absoluteFill, { backgroundColor: tabBg }]} />
           ) : null,
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
-          tabBarIcon: ({ color }) => (
-            <SymbolView name="house" tintColor={color} size={24} />
-          ),
+          title: "Camera",
+          tabBarIcon: ({ color }) => <Ionicons name="camera" size={24} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="effects"
+        options={{
+          title: "Effects",
+          tabBarIcon: ({ color }) => <Ionicons name="color-wand" size={24} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="gallery"
+        options={{
+          title: "Gallery",
+          tabBarIcon: ({ color }) => <Ionicons name="images" size={24} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="collage"
+        options={{
+          title: "Collage",
+          tabBarIcon: ({ color }) => <MaterialCommunityIcons name="view-grid" size={24} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: "Profile",
+          tabBarIcon: ({ color }) => <Ionicons name="person" size={24} color={color} />,
         }}
       />
     </Tabs>
