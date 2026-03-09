@@ -1,9 +1,10 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react';
 import {
   View, Text, StyleSheet, TouchableOpacity, ScrollView,
-  Dimensions, PanResponder, Alert, Image,
+  Dimensions, PanResponder, Alert, Image, Platform,
 } from 'react-native';
 import { CameraView, useCameraPermissions, CameraType, FlashMode } from 'expo-camera';
+import * as MediaLibrary from 'expo-media-library';
 import * as Haptics from 'expo-haptics';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -166,6 +167,7 @@ export default function CameraScreen() {
   const insets = useSafeAreaInsets();
   const { addPhoto, savedPhotos, isDark } = useApp();
   const [permission, requestPermission] = useCameraPermissions();
+  const [mediaPermission, requestMediaPermission] = MediaLibrary.usePermissions();
   const [facing, setFacing] = useState<CameraType>('front');
   const [flash, setFlash] = useState<FlashMode>('off');
   const [timer, setTimer] = useState<TimerType>('off');
@@ -241,6 +243,19 @@ export default function CameraScreen() {
       if (photo?.uri) {
         const id = Date.now().toString() + Math.random().toString(36).substr(2, 9);
         addPhoto({ id, uri: photo.uri, filterId: selectedFilter.id, timestamp: Date.now() });
+
+        if (Platform.OS !== 'web') {
+          try {
+            let perm = mediaPermission;
+            if (!perm?.granted) {
+              perm = await requestMediaPermission();
+            }
+            if (perm?.granted) {
+              await MediaLibrary.saveToLibraryAsync(photo.uri);
+            }
+          } catch {}
+        }
+
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       }
     } catch (e) {
@@ -249,7 +264,7 @@ export default function CameraScreen() {
       setCapturing(false);
       setCountdown(null);
     }
-  }, [cameraRef, capturing, selectedFilter, addPhoto]);
+  }, [cameraRef, capturing, selectedFilter, addPhoto, mediaPermission, requestMediaPermission]);
 
   const capturePhoto = useCallback(() => {
     if (timer === 'off') {

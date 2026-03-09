@@ -134,7 +134,7 @@ function PhotoViewer({ photo, onClose, onDelete }: { photo: SavedPhoto; onClose:
   };
 
   return (
-    <Modal visible animationType="fade" presentationStyle="fullScreen" statusBarTranslucent>
+    <Modal visible animationType="slide" transparent={false}>
       <View style={styles.viewerContainer}>
         {showBeforeAfter ? (
           <BeforeAfterSlider uri={photo.uri} filter={filter} />
