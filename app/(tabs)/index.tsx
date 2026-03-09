@@ -13,6 +13,7 @@ import Animated, {
   useSharedValue, useAnimatedStyle, withSpring, withTiming, withSequence, withRepeat,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import ARFilterOverlay, { AR_FILTERS, ARFilterDef } from '@/components/ARFilterOverlay';
 import { useApp } from '@/context/AppContext';
 import { FILTERS, FilterConfig, STICKER_PACKS } from '@/constants/filters';
 
@@ -180,6 +181,8 @@ export default function CameraScreen() {
   const [capturing, setCapturing] = useState(false);
   const [countdown, setCountdown] = useState<number | null>(null);
   const [activeTool, setActiveTool] = useState<string | null>(null);
+  const [selectedARFilter, setSelectedARFilter] = useState<ARFilterDef>(AR_FILTERS[0]);
+  const [filterTab, setFilterTab] = useState<'face' | 'color'>('face');
 
   const [beauty, setBeauty] = useState({ smooth: 0, brighten: 0, slim: 0, enlarge: 0, teeth: 0 });
 
@@ -245,7 +248,7 @@ export default function CameraScreen() {
         const id = Date.now().toString() + Math.random().toString(36).substr(2, 9);
         addPhoto({ id, uri: photo.uri, filterId: selectedFilter.id, timestamp: Date.now() });
 
-        if (Platform.OS !== 'web') {
+        if (Platform.OS === 'ios') {
           try {
             await MediaLibrary.saveToLibraryAsync(photo.uri);
           } catch {}
@@ -355,6 +358,7 @@ export default function CameraScreen() {
         )}
         {warmOverlay && <View style={[StyleSheet.absoluteFill, { backgroundColor: warmOverlay } as any]} />}
         {whitenOverlay && <View style={[StyleSheet.absoluteFill, { backgroundColor: whitenOverlay } as any]} />}
+        <ARFilterOverlay filterId={selectedARFilter.id} />
       </View>
 
       <Animated.View style={[StyleSheet.absoluteFill, styles.captureFlashOverlay, flashOverlayStyle]} />
@@ -428,22 +432,55 @@ export default function CameraScreen() {
           </View>
         ) : null}
 
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={styles.filterScroll}
-          contentContainerStyle={styles.filterScrollContent}
-        >
-          {FILTERS.map(filter => (
-            <FilterChip
-              key={filter.id}
-              filter={filter}
-              isSelected={selectedFilter.id === filter.id}
-              intensity={filterIntensity}
-              onPress={() => { setSelectedFilter(filter); closePanel(); Haptics.selectionAsync(); }}
-            />
-          ))}
-        </ScrollView>
+        <View style={styles.filterTabRow}>
+          <TouchableOpacity
+            style={[styles.filterTabBtn, filterTab === 'face' && styles.filterTabBtnActive]}
+            onPress={() => { setFilterTab('face'); Haptics.selectionAsync(); }}
+          >
+            <Text style={[styles.filterTabText, filterTab === 'face' && styles.filterTabTextActive]}>Face</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.filterTabBtn, filterTab === 'color' && styles.filterTabBtnActive]}
+            onPress={() => { setFilterTab('color'); Haptics.selectionAsync(); }}
+          >
+            <Text style={[styles.filterTabText, filterTab === 'color' && styles.filterTabTextActive]}>Color</Text>
+          </TouchableOpacity>
+        </View>
+
+        {filterTab === 'face' ? (
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterScroll} contentContainerStyle={styles.filterScrollContent}>
+            {AR_FILTERS.map(filter => (
+              <TouchableOpacity
+                key={filter.id}
+                style={styles.arFilterChip}
+                onPress={() => { setSelectedARFilter(filter); closePanel(); Haptics.selectionAsync(); }}
+                activeOpacity={0.85}
+              >
+                <View style={[styles.arFilterPreview, selectedARFilter.id === filter.id && styles.arFilterPreviewActive]}>
+                  <Text style={styles.arFilterEmoji}>{filter.thumbnail}</Text>
+                  {selectedARFilter.id === filter.id && (
+                    <View style={styles.arFilterRing} />
+                  )}
+                </View>
+                <Text style={[styles.filterChipName, selectedARFilter.id === filter.id && { color: '#FF6B9A', fontFamily: 'Inter_600SemiBold' }]}>
+                  {filter.name}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        ) : (
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterScroll} contentContainerStyle={styles.filterScrollContent}>
+            {FILTERS.map(filter => (
+              <FilterChip
+                key={filter.id}
+                filter={filter}
+                isSelected={selectedFilter.id === filter.id}
+                intensity={filterIntensity}
+                onPress={() => { setSelectedFilter(filter); closePanel(); Haptics.selectionAsync(); }}
+              />
+            ))}
+          </ScrollView>
+        )}
 
         <View style={[styles.captureRow, { paddingBottom: insets.bottom + 76 }]}>
           <TouchableOpacity
@@ -601,6 +638,16 @@ const styles = StyleSheet.create({
   filterIntensityBar: { position: 'absolute', bottom: 0, left: 0, right: 0, height: 3, backgroundColor: 'rgba(0,0,0,0.4)' },
   filterIntensityFill: { height: 3 },
   filterChipName: { fontSize: 11, color: 'rgba(255,255,255,0.65)', fontFamily: 'Inter_500Medium' },
+  filterTabRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingTop: 8, paddingHorizontal: 16 },
+  filterTabBtn: { paddingHorizontal: 22, paddingVertical: 6, borderRadius: 20, backgroundColor: 'rgba(255,255,255,0.08)', borderWidth: 1, borderColor: 'transparent' },
+  filterTabBtnActive: { backgroundColor: 'rgba(255,107,154,0.2)', borderColor: '#FF6B9A' },
+  filterTabText: { fontSize: 13, color: 'rgba(255,255,255,0.5)', fontFamily: 'Inter_600SemiBold' },
+  filterTabTextActive: { color: '#FF6B9A' },
+  arFilterChip: { alignItems: 'center', gap: 4, marginRight: 2 },
+  arFilterPreview: { width: 62, height: 62, borderRadius: 14, backgroundColor: 'rgba(255,255,255,0.08)', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
+  arFilterPreviewActive: { backgroundColor: 'rgba(255,107,154,0.2)' },
+  arFilterEmoji: { fontSize: 30 },
+  arFilterRing: { ...StyleSheet.absoluteFillObject, borderRadius: 14, borderWidth: 2.5, borderColor: '#FF6B9A' },
   captureRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 28, paddingTop: 10 },
   galleryPreview: { width: 54, height: 54, borderRadius: 14, overflow: 'hidden', borderWidth: 2, borderColor: 'rgba(255,255,255,0.3)' },
   galleryPreviewImg: { width: '100%', height: '100%' },
