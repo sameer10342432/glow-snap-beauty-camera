@@ -1,0 +1,365 @@
+PRD – Beauty Camera App
+Project Name
+
+GlowSnap – Beauty Camera & Selfie Filters
+
+1. Product Overview
+
+GlowSnap is a mobile beauty camera application that allows users to capture photos and videos with built-in beauty filters, makeup effects, and photo editing tools.
+
+The app focuses on providing simple, fast, and high-quality selfie enhancements without using artificial intelligence. Users can apply filters, beauty effects, stickers, and editing tools while taking photos or editing pictures from their gallery.
+
+The goal is to create a lightweight and easy-to-use beauty camera that helps users take attractive selfies and share them on social media.
+
+2. Product Goals
+
+Provide high-quality selfie filters
+
+Offer simple beauty editing tools
+
+Create a fast and lightweight camera app
+
+Allow users to capture and edit photos easily
+
+Provide fun stickers and visual effects
+
+Generate revenue through ads and premium filters
+
+3. Target Audience
+Primary Users
+
+Teenagers
+
+Social media users
+
+Selfie lovers
+
+Instagram and TikTok users
+
+Secondary Users
+
+Casual photo editors
+
+Content creators
+
+4. Platforms
+
+Primary platform:
+
+Android
+
+Future platform:
+
+iOS
+
+5. Core Features
+5.1 Beauty Camera
+
+Users can take photos using the built-in beauty camera.
+
+Beauty Options
+
+Skin smoothing
+
+Skin brightness
+
+Face slimming
+
+Eye enlargement
+
+Teeth whitening
+
+Dark circle reduction
+
+All beauty adjustments are controlled with sliders.
+
+5.2 Photo Filters
+
+Users can apply filters to photos in real time.
+
+Filter Categories
+
+Natural Filters
+Soft Filters
+Warm Tone Filters
+Cool Tone Filters
+Vintage Filters
+Black & White Filters
+Bright Filters
+Dream Filters
+
+Total filters at launch:
+
+30 – 40 filters
+
+5.3 Makeup Effects
+
+Users can apply makeup effects directly to selfies.
+
+Makeup Options
+
+Lipstick
+
+Blush
+
+Eyeliner
+
+Eyeshadow
+
+Eyebrows
+
+Foundation
+
+Each makeup option has multiple color choices.
+
+5.4 Stickers
+
+Users can place fun stickers on photos.
+
+Sticker Categories
+
+Cute
+
+Emojis
+
+Animals
+
+Love
+
+Party
+
+Funny
+
+Users can:
+
+Resize stickers
+
+Rotate stickers
+
+Move stickers
+
+5.5 AR Effects
+
+Camera effects that appear on the face.
+
+Examples:
+
+Butterfly effect
+
+Sparkle effect
+
+Heart effect
+
+Bokeh light
+
+Snow effect
+
+Neon glow
+
+Light leaks
+
+Launch effects:
+
+40+ effects
+
+5.6 Photo Editor
+
+Users can edit photos from the gallery.
+
+Editing Tools
+
+Brightness
+Contrast
+Saturation
+Temperature
+Sharpness
+Blur
+Grain
+Vignette
+Crop
+Rotate
+Flip
+
+5.7 Video Camera Mode
+
+Users can record videos with filters and beauty effects.
+
+Features:
+
+Real-time filters
+
+Beauty adjustments
+
+Effects
+
+Stickers
+
+5.8 Collage Maker
+
+Users can combine multiple photos into one image.
+
+Collage Features
+
+Grid layouts
+
+Free style collage
+
+Social media collage
+
+Total layouts:
+
+30+
+
+6. User Flow
+Step 1
+
+User opens the app.
+
+Splash Screen appears.
+
+Step 2
+
+Camera screen opens.
+
+User can choose:
+
+Photo
+
+Video
+
+Gallery
+
+Step 3
+
+User selects filters, effects, or beauty adjustments.
+
+Step 4
+
+User takes a photo or records a video.
+
+Step 5
+
+User edits the photo if needed.
+
+Step 6
+
+User saves or shares the image.
+
+7. UI / UX Requirements
+Theme Options
+
+Light Mode
+
+Dark Mode
+
+Toggle switch to change theme
+
+Design Style
+
+Minimal interface
+
+Smooth animations
+
+Large camera preview
+
+Easy filter selection
+
+Navigation
+
+Bottom Navigation Bar
+
+Tabs:
+
+Camera
+Effects
+Gallery
+Collage
+Profile
+
+8. Performance Requirements
+
+Camera start time: less than 2 seconds
+
+Filter load time: less than 1 second
+
+App size target: below 100 MB
+
+App should work smoothly on mid-range Android devices.
+
+9. Monetization
+Free Version
+
+Includes:
+
+Basic filters
+
+Basic beauty tools
+
+Ads
+
+Premium Version
+
+Includes:
+
+All filters unlocked
+
+All effects unlocked
+
+No ads
+
+Premium stickers
+
+Subscription plans:
+
+Monthly
+
+Yearly
+
+10. Advertisement Integration
+
+Ad Network:
+
+Google AdMob
+
+Ad Types:
+
+Banner Ads
+Interstitial Ads
+Rewarded Ads
+
+11. App Store Optimization
+App Title
+
+GlowSnap – Beauty Camera & Selfie Filters
+
+Keywords
+
+beauty camera
+selfie camera
+photo filters
+beauty selfie
+makeup camera
+selfie editor
+camera filters
+
+12. Permissions Required
+
+Camera – to capture photos
+Storage – to save images
+Microphone – for video recording
+Internet – for ads and updates
+
+13. Future Updates
+
+New filter packs
+Seasonal stickers
+New collage layouts
+Video editing tools
+More makeup styles
+
+14. Success Metrics
+
+100,000 downloads within first year
+App rating above 4.3
+High daily user engagement
+Increasing premium subscriptions
