@@ -318,7 +318,7 @@ const styles = StyleSheet.create({
   proBannerBtn: { borderRadius: 10, paddingHorizontal: 12, paddingVertical: 7 },
   proBannerBtnText: { color: '#fff', fontSize: 12, fontFamily: 'Inter_700Bold' },
   effectCard: { borderRadius: 18, overflow: 'hidden', flex: 1 },
-  effectCardSelected: { shadowColor: '#FF6B9A', shadowOpacity: 0.5, shadowRadius: 14, elevation: 10 },
+  effectCardSelected: { elevation: 10 },
   effectCardGradient: { height: CARD_W * 0.82, alignItems: 'center', justifyContent: 'center', position: 'relative' },
   lockedOverlay: { alignItems: 'center', justifyContent: 'center' },
   lockIconWrap: { width: 54, height: 54, borderRadius: 27, backgroundColor: 'rgba(255,215,0,0.12)', alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: 'rgba(255,215,0,0.25)' },

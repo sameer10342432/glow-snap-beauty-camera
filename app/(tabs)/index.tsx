@@ -625,6 +625,6 @@ const styles = StyleSheet.create({
   cameraSliderLabel: { width: 60, fontSize: 13, color: '#9B99AA', fontFamily: 'Inter_500Medium' },
   cameraSliderTrack: { flex: 1, height: 6, backgroundColor: '#2E2E42', borderRadius: 3, overflow: 'visible', position: 'relative' },
   cameraSliderFill: { height: 6, borderRadius: 3 },
-  cameraSliderThumb: { position: 'absolute', width: 20, height: 20, borderRadius: 10, backgroundColor: '#FF6B9A', top: -7, marginLeft: -10, borderWidth: 2.5, borderColor: '#fff', shadowColor: '#FF6B9A', shadowOpacity: 0.6, shadowRadius: 6, elevation: 4 },
+  cameraSliderThumb: { position: 'absolute', width: 20, height: 20, borderRadius: 10, backgroundColor: '#FF6B9A', top: -7, marginLeft: -10, borderWidth: 2.5, borderColor: '#fff', elevation: 4 },
   cameraSliderValue: { width: 30, fontSize: 12, color: '#9B99AA', fontFamily: 'Inter_500Medium', textAlign: 'right' },
 });

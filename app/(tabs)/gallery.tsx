@@ -113,7 +113,7 @@ function EditPanel({ photo, onClose }: { photo: SavedPhoto; onClose: () => void 
         <EditSlider label="Brightness" value={brightness} onChange={setBrightness} />
         <EditSlider label="Contrast" value={contrast} onChange={setContrast} />
         <EditSlider label="Warmth" value={warm} onChange={setWarm} />
-        {warm > 0 && <View style={[StyleSheet.absoluteFill, { backgroundColor: `rgba(255,140,66,${warm * 0.12})`, borderRadius: 24 }]} pointerEvents="none" />}
+        {warm > 0 && <View style={[StyleSheet.absoluteFill, { backgroundColor: `rgba(255,140,66,${warm * 0.12})`, borderRadius: 24, pointerEvents: 'none' } as any]} />}
       </LinearGradient>
     </View>
   );
@@ -142,7 +142,7 @@ function PhotoViewer({ photo, onClose, onDelete }: { photo: SavedPhoto; onClose:
           <>
             <Image source={{ uri: photo.uri }} style={StyleSheet.absoluteFill} resizeMode="contain" />
             {filter.overlay !== 'transparent' && filter.overlayOpacity > 0 && (
-              <View style={[StyleSheet.absoluteFill, { backgroundColor: filter.overlay, opacity: filter.overlayOpacity }]} pointerEvents="none" />
+              <View style={[StyleSheet.absoluteFill, { backgroundColor: filter.overlay, opacity: filter.overlayOpacity, pointerEvents: 'none' } as any]} />
             )}
           </>
         )}
