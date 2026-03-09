@@ -167,7 +167,6 @@ export default function CameraScreen() {
   const insets = useSafeAreaInsets();
   const { addPhoto, savedPhotos, isDark } = useApp();
   const [permission, requestPermission] = useCameraPermissions();
-  const [mediaPermission, requestMediaPermission] = MediaLibrary.usePermissions();
   const [facing, setFacing] = useState<CameraType>('front');
   const [flash, setFlash] = useState<FlashMode>('off');
   const [timer, setTimer] = useState<TimerType>('off');
@@ -246,13 +245,7 @@ export default function CameraScreen() {
 
         if (Platform.OS !== 'web') {
           try {
-            let perm = mediaPermission;
-            if (!perm?.granted) {
-              perm = await requestMediaPermission();
-            }
-            if (perm?.granted) {
-              await MediaLibrary.saveToLibraryAsync(photo.uri);
-            }
+            await MediaLibrary.saveToLibraryAsync(photo.uri);
           } catch {}
         }
 
@@ -264,7 +257,7 @@ export default function CameraScreen() {
       setCapturing(false);
       setCountdown(null);
     }
-  }, [cameraRef, capturing, selectedFilter, addPhoto, mediaPermission, requestMediaPermission]);
+  }, [cameraRef, capturing, selectedFilter, addPhoto]);
 
   const capturePhoto = useCallback(() => {
     if (timer === 'off') {
