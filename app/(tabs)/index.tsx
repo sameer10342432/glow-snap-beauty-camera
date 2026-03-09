@@ -1,5 +1,5 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react';
-import { useRouter } from 'expo-router';
+
 import {
   View, Text, StyleSheet, TouchableOpacity, ScrollView,
   Dimensions, PanResponder, Alert, Image, Platform,
@@ -13,6 +13,7 @@ import Animated, {
   useSharedValue, useAnimatedStyle, withSpring, withTiming, withSequence, withRepeat,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import ARFilterOverlay, { AR_FILTERS, ARFilterDef } from '@/components/ARFilterOverlay';
 import { useApp } from '@/context/AppContext';
 import { FILTERS, FilterConfig, STICKER_PACKS } from '@/constants/filters';
@@ -168,7 +169,9 @@ function CameraSlider({ label, value, onChange, colors }: {
 export default function CameraScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const params = useLocalSearchParams<{ arFilter?: string; stickerId?: string }>();
   const { addPhoto, savedPhotos, isDark } = useApp();
+
   const [permission, requestPermission] = useCameraPermissions();
   const [facing, setFacing] = useState<CameraType>('front');
   const [flash, setFlash] = useState<FlashMode>('off');
@@ -178,6 +181,30 @@ export default function CameraScreen() {
   const [filterIntensity, setFilterIntensity] = useState(0.5);
   const [openPanel, setOpenPanel] = useState<PanelType>(null);
   const [placedStickers, setPlacedStickers] = useState<PlacedSticker[]>([]);
+
+  useEffect(() => {
+    if (params.arFilter) {
+      const filter = AR_FILTERS.find(f => f.id === params.arFilter);
+      if (filter) {
+        setSelectedARFilter(filter);
+      }
+    }
+    if (params.stickerId) {
+      const pack = STICKER_PACKS.find(p => p.stickers.some(s => s.id === params.stickerId));
+      const sticker = pack?.stickers.find(s => s.id === params.stickerId);
+      if (sticker) {
+        setPlacedStickers(prev => [...prev, {
+          id: Date.now().toString(),
+          stickerId: sticker.id,
+          x: SCREEN_W / 2 - 40,
+          y: SCREEN_H / 2 - 40,
+          icon: sticker.icon,
+          lib: sticker.lib,
+          color: sticker.color
+        }]);
+      }
+    }
+  }, [params.arFilter, params.stickerId]);
   const [capturing, setCapturing] = useState(false);
   const [countdown, setCountdown] = useState<number | null>(null);
   const [activeTool, setActiveTool] = useState<string | null>(null);

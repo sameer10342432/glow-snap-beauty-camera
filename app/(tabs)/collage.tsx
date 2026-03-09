@@ -16,12 +16,12 @@ const CANVAS = SCREEN_W - 32;
 interface Layout { id: string; name: string; icon: string; cells: { flex: number }[][] }
 
 const LAYOUTS: Layout[] = [
+  { id: '1x1', name: '1×1', icon: 'square-outline', cells: [[{ flex: 1 }]] },
   { id: '2col', name: '2×1', icon: 'pause-outline', cells: [[{ flex: 1 }, { flex: 1 }]] },
+  { id: '1x2', name: '1×2', icon: 'reorder-two-outline', cells: [[{ flex: 1 }], [{ flex: 1 }]] },
+  { id: '2x2', name: '2×2', icon: 'grid-outline', cells: [[{ flex: 1 }, { flex: 1 }], [{ flex: 1 }, { flex: 1 }]] },
   { id: '3col', name: '3×1', icon: 'reorder-three-outline', cells: [[{ flex: 1 }, { flex: 1 }, { flex: 1 }]] },
-  { id: 'feat', name: 'Feature', icon: 'albums-outline', cells: [[{ flex: 1 }], [{ flex: 1 }, { flex: 1 }]] },
-  { id: '2x2', name: '2×2', icon: 'grid', cells: [[{ flex: 1 }, { flex: 1 }], [{ flex: 1 }, { flex: 1 }]] },
-  { id: 'left', name: 'Left', icon: 'browsers-outline', cells: [[{ flex: 2 }, { flex: 1 }]] },
-  { id: 'stack', name: 'Stack', icon: 'layers-outline', cells: [[{ flex: 1 }], [{ flex: 1 }], [{ flex: 1 }]] },
+  { id: 'free', name: 'Freestyle', icon: 'brush-outline', cells: [[{ flex: 1 }, { flex: 1 }], [{ flex: 1 }]] },
 ];
 
 const BORDER_COLORS = ['#FFFFFF', '#000000', '#FF6B9A', '#FF8E53', '#9B8EC4', '#FFD700', '#4A90D9', '#2ED573'];

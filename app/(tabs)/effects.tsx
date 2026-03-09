@@ -14,43 +14,37 @@ import Animated, {
 import { useApp } from '@/context/AppContext';
 import { STICKER_PACKS } from '@/constants/filters';
 
+import { AR_FILTERS, ARFilterDef } from '@/components/ARFilterOverlay';
+import { useRouter } from 'expo-router';
+
 const { width: SCREEN_W } = Dimensions.get('window');
 const CARD_W = (SCREEN_W - 52) / 2;
 
-interface AREffect {
-  id: string;
-  name: string;
+interface AREffect extends ARFilterDef {
   description: string;
-  icon: string;
-  lib: string;
   colors: [string, string];
-  category: string;
   premium: boolean;
   trending: boolean;
 }
 
-const AR_EFFECTS: AREffect[] = [
-  { id: 'sparkle', name: 'Sparkle', description: 'Glitter & sparkles', icon: 'sparkles', lib: 'Ionicons', colors: ['#FFD700', '#FFA500'], category: 'Trending', premium: false, trending: true },
-  { id: 'hearts', name: 'Hearts', description: 'Floating hearts', icon: 'heart', lib: 'Ionicons', colors: ['#FF6B9A', '#FF4757'], category: 'Trending', premium: false, trending: true },
-  { id: 'butterfly', name: 'Butterfly', description: 'Floating butterflies', icon: 'butterfly-outline', lib: 'MaterialCommunityIcons', colors: ['#FF85A2', '#DA70D6'], category: 'Cute', premium: false, trending: true },
-  { id: 'flower', name: 'Flowers', description: 'Petal shower', icon: 'flower-outline', lib: 'MaterialCommunityIcons', colors: ['#FF85A2', '#FF6B9A'], category: 'Cute', premium: false, trending: false },
-  { id: 'neon', name: 'Neon Glow', description: 'Neon light rings', icon: 'radio-button-on', lib: 'Ionicons', colors: ['#00FFFF', '#7B68EE'], category: 'Light', premium: false, trending: false },
-  { id: 'bokeh', name: 'Bokeh', description: 'Soft light orbs', icon: 'ellipse', lib: 'Ionicons', colors: ['#A8D8EA', '#7B68EE'], category: 'Light', premium: false, trending: false },
-  { id: 'starfield', name: 'Starfield', description: 'Twinkling stars', icon: 'star', lib: 'Ionicons', colors: ['#9B8EC4', '#7B68EE'], category: 'Light', premium: true, trending: false },
-  { id: 'rainbow', name: 'Rainbow', description: 'Colorful arcs', icon: 'partly-sunny', lib: 'Ionicons', colors: ['#FF6B9A', '#FFD700'], category: 'Party', premium: false, trending: false },
-  { id: 'confetti', name: 'Confetti', description: 'Colorful confetti', icon: 'ticket', lib: 'Ionicons', colors: ['#FF6B9A', '#FF8E53'], category: 'Party', premium: false, trending: true },
-  { id: 'lightning', name: 'Lightning', description: 'Electric bolts', icon: 'flash', lib: 'Ionicons', colors: ['#FFD700', '#FF8C42'], category: 'Party', premium: true, trending: false },
-  { id: 'snow', name: 'Snow', description: 'Snowflake shower', icon: 'snow', lib: 'Ionicons', colors: ['#A8D8EA', '#4A90D9'], category: 'Face', premium: false, trending: false },
-  { id: 'crown', name: 'Crown', description: 'Golden crown', icon: 'crown', lib: 'MaterialCommunityIcons', colors: ['#FFD700', '#FFA500'], category: 'Face', premium: false, trending: true },
-  { id: 'cat', name: 'Cat Ears', description: 'Cute cat ears', icon: 'cat', lib: 'MaterialCommunityIcons', colors: ['#D4877A', '#FF85A2'], category: 'Face', premium: true, trending: false },
-  { id: 'galaxy', name: 'Galaxy', description: 'Cosmic swirls', icon: 'planet', lib: 'Ionicons', colors: ['#9B8EC4', '#1C1C2A'], category: 'Light', premium: true, trending: false },
-  { id: 'jellyfish', name: 'Cosmic', description: 'Cosmic aura glow', icon: 'shimmer', lib: 'MaterialCommunityIcons', colors: ['#DA70D6', '#9B8EC4'], category: 'Cute', premium: true, trending: false },
-  { id: 'fireworks', name: 'Fireworks', description: 'Firework bursts', icon: 'bonfire-outline', lib: 'Ionicons', colors: ['#FF8E53', '#FF6B9A'], category: 'Party', premium: true, trending: false },
-];
+const AR_EFFECTS: AREffect[] = AR_FILTERS.map((f, i) => {
+  const colors: [string, string][] = [
+    ['#FF6B9A', '#FF8E53'], ['#FFD700', '#FFA500'], ['#A8D8EA', '#4A90D9'],
+    ['#FF85A2', '#DA70D6'], ['#9B8EC4', '#7B68EE'], ['#00FFFF', '#7B68EE'],
+    ['#FF4757', '#FF6B9B'], ['#2ED573', '#7BED9F'], ['#4A90D9', '#50E3C2']
+  ];
+  return {
+    ...f,
+    description: `Beautiful ${f.name} effect`,
+    colors: colors[i % colors.length],
+    premium: i > 12, // Mark some as premium
+    trending: i % 5 === 0,
+  };
+}).filter(f => f.id !== 'ar_none');
 
-const CATEGORIES = ['Trending', 'Face', 'Light', 'Cute', 'Party'];
+const CATEGORIES = ['All', 'Face', 'Animals', 'Fantasy', 'Party', 'Vibes'];
 
-function AnimatedEffectIcon({ icon, lib, colors, isSelected }: { icon: string; lib: string; colors: [string, string]; isSelected: boolean }) {
+function AnimatedEffectIcon({ thumbnail, colors, isSelected }: { thumbnail: string; colors: [string, string]; isSelected: boolean }) {
   const pulse = useSharedValue(0);
   const rotate = useSharedValue(0);
 
@@ -76,13 +70,11 @@ function AnimatedEffectIcon({ icon, lib, colors, isSelected }: { icon: string; l
     transform: [{ scale: 1 + interpolate(pulse.value, [0, 1], [0, 0.3]) }],
   }));
 
-  const IconComp = lib === 'MaterialCommunityIcons' ? MaterialCommunityIcons : Ionicons;
-
   return (
     <View style={{ alignItems: 'center', justifyContent: 'center' }}>
       <Animated.View style={[{ position: 'absolute', width: 50, height: 50, borderRadius: 25, backgroundColor: colors[0] }, glowStyle]} />
       <Animated.View style={iconStyle}>
-        <IconComp name={icon as any} size={40} color="rgba(255,255,255,0.92)" />
+        <Text style={{ fontSize: 32 }}>{thumbnail}</Text>
       </Animated.View>
     </View>
   );
@@ -95,6 +87,7 @@ function EffectCard({ effect, isSelected, onPress, isPremium }: {
   isPremium: boolean;
 }) {
   const scale = useSharedValue(1);
+  const router = useRouter();
   const cardStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
   const locked = effect.premium && !isPremium;
 
@@ -107,6 +100,8 @@ function EffectCard({ effect, isSelected, onPress, isPremium }: {
           scale.value = withSequence(withSpring(0.94), withSpring(1));
           onPress();
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          // Navigate to camera with filter
+          router.push({ pathname: '/', params: { arFilter: effect.id } });
         }}
         activeOpacity={0.9}
       >
@@ -122,7 +117,7 @@ function EffectCard({ effect, isSelected, onPress, isPremium }: {
               </View>
             </View>
           ) : (
-            <AnimatedEffectIcon icon={effect.icon} lib={effect.lib} colors={effect.colors} isSelected={isSelected} />
+            <AnimatedEffectIcon thumbnail={effect.thumbnail} colors={effect.colors} isSelected={isSelected} />
           )}
           {effect.trending && !locked && (
             <View style={styles.trendingBadge}>
@@ -153,6 +148,7 @@ function EffectCard({ effect, isSelected, onPress, isPremium }: {
 
 function StickerItem({ sticker }: { sticker: typeof STICKER_PACKS[0]['stickers'][0] }) {
   const scale = useSharedValue(1);
+  const router = useRouter();
   const cardStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
   const IconComp = sticker.lib === 'MaterialCommunityIcons' ? MaterialCommunityIcons : Ionicons;
   return (
@@ -162,6 +158,8 @@ function StickerItem({ sticker }: { sticker: typeof STICKER_PACKS[0]['stickers']
         onPress={() => {
           scale.value = withSequence(withSpring(0.85), withSpring(1.1), withSpring(1));
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          // Navigate to camera with sticker
+          router.push({ pathname: '/', params: { stickerId: sticker.id } });
         }}
         activeOpacity={0.85}
       >
