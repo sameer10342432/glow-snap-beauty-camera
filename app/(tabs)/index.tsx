@@ -1,4 +1,5 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react';
+import { useRouter } from 'expo-router';
 import {
   View, Text, StyleSheet, TouchableOpacity, ScrollView,
   Dimensions, PanResponder, Alert, Image, Platform,
@@ -165,6 +166,7 @@ function CameraSlider({ label, value, onChange, colors }: {
 
 export default function CameraScreen() {
   const insets = useSafeAreaInsets();
+  const router = useRouter();
   const { addPhoto, savedPhotos, isDark } = useApp();
   const [permission, requestPermission] = useCameraPermissions();
   const [facing, setFacing] = useState<CameraType>('front');
@@ -446,7 +448,7 @@ export default function CameraScreen() {
         <View style={[styles.captureRow, { paddingBottom: insets.bottom + 76 }]}>
           <TouchableOpacity
             style={styles.galleryPreview}
-            onPress={() => {}}
+            onPress={() => router.push('/gallery')}
             activeOpacity={0.85}
           >
             {lastPhoto ? (
